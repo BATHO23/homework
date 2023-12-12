@@ -113,10 +113,54 @@ document
   .addEventListener("click", convertTemperature);
 // Display current temperature, wind speed, and humidity in the search result
 function displaySearchResult(weatherData) {
-  document.getElementById('temperature').textContent = weatherData.temp + ' \'C';
-  document.getElementById('wind-speed').textContent = weatherData.speed + ' km/h';
-  document.getElementById('humidity').textContent = weatherData.humidity + '%';
+  document.getElementById("temperature").textContent = weatherData.temp + " '";
+  document.getElementById("wind-speed").textContent =
+    weatherData.speed + " km/h";
+  document.getElementById("humidity").textContent = weatherData.humidity + "%";
 }
 
-// Call this function with the relevant data after fetching the weather
-// Example usage: displaySearchResult({ temp: 26, speed: 15, humidity: 80 });
+// Update the convertTemperature function to use displayConversionResult
+function convertTemperature() {
+  const temperatureElement = document.getElementById('temperature');
+  const tempValue = temperatureElement.textContent.trim().split(' ')[0];
+  let newTemp;
+  let unit;
+  if (temperatureElement.textContent.includes('C')) {
+    newTemp = (tempValue * 9) / 5 + 32;
+    unit = 'F';
+  } else {
+    newTemp = ((tempValue - 32) * 5) / 9;
+    unit = 'C';
+  }
+  displayConversionResult(newTemp, unit);
+}
+// Function to remove the 'C' from the 5 day forecast temperatures and convert them
+function updateForecastTemperatures(unit) {
+  for (let i = 1; i <= 5; i++) {
+    const tempElement = document.getElementById(`temp-day-${i}`);
+    let tempValue = tempElement.textContent.trim().split(' ')[0];
+    if (unit === 'F') {
+      tempValue = (tempValue * 9) / 5 + 32;
+    } else if (unit === 'C') {
+      tempValue = ((tempValue - 32) * 5) / 9;
+    }
+    tempElement.textContent = `${tempValue.toFixed(1)}${unit}`;
+  }
+}
+
+// Modify the convertTemperature function to also convert forecast temperatures
+function convertTemperature() {
+  const temperatureElement = document.getElementById('temperature');
+  const tempValue = temperatureElement.textContent.trim().split(' ')[0];
+  let newTemp;
+  let unit;
+  if (temperatureElement.textContent.includes('C')) {
+    newTemp = (tempValue * 9) / 5 + 32;
+    unit = 'F';
+  } else {
+    newTemp = ((tempValue - 32) * 5) / 9;
+    unit = 'C';
+  }
+  displayConversionResult(newTemp, unit);
+  updateForecastTemperatures(unit);
+}
